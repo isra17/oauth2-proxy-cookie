@@ -1,4 +1,6 @@
 machine:
   post:
     - pyenv global 2.7.14 3.6.3
-
+test:
+  override:
+    - tox
