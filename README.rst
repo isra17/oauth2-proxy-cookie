@@ -6,8 +6,8 @@ based on the Cookie.
 The reference implementation in Go is located `here
 <https://github.com/bitly/oauth2_proxy/blob/master/cookie/cookies.go>`_.
 
-Example:
----
+Example
+=======
 
 .. code:: python
 
