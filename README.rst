@@ -1,3 +1,6 @@
+.. image:: https://circleci.com/gh/isra17/oauth2-proxy-cookie.svg?style=svg
+    :target: https://circleci.com/gh/isra17/oauth2-proxy-cookie
+
 Support library to be used with `bitly/oauth2_proxy
 <https://github.com/bitly/oauth2_proxy>`_ to validate and decode the Cookie
 passed upstream. The library provide a Flask extension to authorize requests
