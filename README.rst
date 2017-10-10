@@ -9,14 +9,10 @@ Example:
 .. code:: python
 
   from flask import request, abort
-  from oauth2_proxy_cookie import validate, InvalidSignature
+  from oauth2_proxy_cookie import Validator
 
   secret = <oauth2_proxy cookie secret>
+  validator = Validator(secret, '_oauth2_proxy')
   cookie = request.headers.get('Cookie')
-  try:
-    value, time = validate(cookie)
-  except InvalidSignature as e:
-    abort(401)
-
-
+  value, time = validator.validate(cookie)
 
