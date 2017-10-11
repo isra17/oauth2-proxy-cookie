@@ -1,5 +1,6 @@
 import flask
 import freezegun
+import six
 import unittest
 from datetime import datetime, timedelta
 from oauth2_proxy_cookie import Validator, InvalidCookie, InvalidSignature, ExpiredCookie, OAuth2ProxyCookie
@@ -21,6 +22,9 @@ class OAuth2ProxyCookieTest(unittest.TestCase):
     def test_validate(self):
         self.assertEqual(
             self.validator.validate(VALID_COOKIE), (b'foo@bar', COOKIE_DATE))
+        self.assertEqual(
+            self.validator.validate(six.text_type(VALID_COOKIE)),
+            (b'foo@bar', COOKIE_DATE))
 
         with self.assertRaises(InvalidCookie):
             self.validator.validate('foobar')
@@ -34,18 +38,22 @@ class OAuth2ProxyCookieTest(unittest.TestCase):
         with self.assertRaises(ExpiredCookie):
             self.validator.validate(EXPIRED_COOKIE)
 
+
 class FlaskTest(unittest.TestCase):
     def setUp(self):
         self.app = flask.Flask('test')
         self.app.testing = True
         self.client = self.app.test_client()
+
         @self.app.route('/')
         def index():
             return 'It works!'
+
         @self.app.route('/ping')
         def ping():
             return 'Pong'
 
+    @freezegun.freeze_time(COOKIE_DATE)
     def test_extension(self):
         self.app.config.update({
             'OAUTH2_PROXY_COOKIE_SECRET': b'ThisIsASecret',
@@ -61,6 +69,8 @@ class FlaskTest(unittest.TestCase):
         rv = self.client.get('/ping', headers={'X-Forwarded-For': '1.1.1.1'})
         self.assertEqual(rv.status_code, 200)
 
-        self.client.set_cookie('localhost', '_oauth2_proxy', VALID_COOKIE)
-        rv = self.client.get('/', headers={'X-Forwarded-For': '1.1.1.1'})
-        self.assertEqual(rv.status_code, 200)
+        with self.client:
+            self.client.set_cookie('localhost', '_oauth2_proxy', VALID_COOKIE)
+            rv = self.client.get('/', headers={'X-Forwarded-For': '1.1.1.1'})
+            self.assertEqual(rv.status_code, 200)
+            self.assertEqual('foo@bar', flask.g.user)

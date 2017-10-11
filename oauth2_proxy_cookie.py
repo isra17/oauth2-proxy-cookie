@@ -34,10 +34,13 @@ class Validator(object):
             raise ValueError('expiration must be datetime.timedelta')
 
         self.secret = secret
-        self.cookie_name = cookie_name.encode()
+        self.cookie_name = cookie_name
         self.expiration = expiration
 
     def validate(self, cookie_value):
+        if six.PY2 and isinstance(cookie_value, unicode):
+            cookie_value = cookie_value.encode()
+
         if not cookie_value:
             raise InvalidCookie
 
@@ -45,7 +48,7 @@ class Validator(object):
         if len(parts) != 3:
             raise InvalidCookie
 
-        sig = self.sign(self.cookie_name, parts[0].encode(), parts[1].encode())
+        sig = self.sign(self.cookie_name, parts[0], parts[1])
         if not self.check_hmac(parts[2], sig):
             raise InvalidSignature
 
@@ -61,12 +64,13 @@ class Validator(object):
     def sign(self, *args):
         h = hmac.new(self.secret, digestmod=hashlib.sha1)
         for arg in args:
-            h.update(arg)
+            h.update(arg.encode())
         return h.digest()
 
     def check_hmac(self, input_signature, signature):
         raw_input_signature = base64.urlsafe_b64decode(input_signature)
         return hmac.compare_digest(raw_input_signature, signature)
+
 
 class OAuth2ProxyCookie(object):
     def __init__(self, app=None, force_https=True, allowed=None):
@@ -79,20 +83,22 @@ class OAuth2ProxyCookie(object):
     def init_app(self, app):
         self.validator = Validator(
             secret=app.config.get('OAUTH2_PROXY_COOKIE_SECRET'),
-            cookie_name=app.config.get('OAUTH2_PROXY_COOKIE_NAME', '_oauth2_proxy'),
-            expiration=app.config.get('OAUTH2_PROXY_COOKIE_EXPIRATION', timedelta(days=7))
-        )
+            cookie_name=app.config.get('OAUTH2_PROXY_COOKIE_NAME',
+                                       '_oauth2_proxy'),
+            expiration=app.config.get(
+                'OAUTH2_PROXY_COOKIE_EXPIRATION', timedelta(days=7)))
 
         app.before_request(self.check_auth)
 
     def check_auth(self):
-        from flask import request, abort
+        from flask import request, abort, g
         # Internal query are not authenticated.
         if not request.headers.get('x-forwarded-for', None):
             return
 
         # HTTPS from the outside.
-        if self.force_https and request.headers.get('x-forwarded-proto', None) == 'http':
+        if self.force_https and request.headers.get('x-forwarded-proto',
+                                                    None) == 'http':
             return redirect(request.url.replace('http://', 'https://'))
 
         # Allowed public endpoints.
@@ -105,8 +111,8 @@ class OAuth2ProxyCookie(object):
         try:
             user_id, _ = self.validator.validate(cookie)
         except ValidateError as e:
-            self.logger.error('Invalid OAuth2Proxy cookie: {} | {}'.format(cookie, e.__class__.__name__))
+            self.logger.error('Invalid OAuth2Proxy cookie: {} | {}'.format(
+                cookie, e.__class__.__name__))
             abort(401)
 
-        g.user = user_id
-
+        g.user = user_id.decode()
