@@ -42,6 +42,9 @@ class FlaskTest(unittest.TestCase):
         @self.app.route('/')
         def index():
             return 'It works!'
+        @self.app.route('/ping')
+        def ping():
+            return 'Pong'
 
     def test_extension(self):
         self.app.config.update({
@@ -58,5 +61,6 @@ class FlaskTest(unittest.TestCase):
         rv = self.client.get('/ping', headers={'X-Forwarded-For': '1.1.1.1'})
         self.assertEqual(rv.status_code, 200)
 
+        self.client.set_cookie('localhost', '_oauth2_proxy', VALID_COOKIE)
         rv = self.client.get('/', headers={'X-Forwarded-For': '1.1.1.1'})
         self.assertEqual(rv.status_code, 200)

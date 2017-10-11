@@ -98,7 +98,7 @@ class OAuth2ProxyCookie(object):
         # Allowed public endpoints.
         if request.url_rule:
             for allowed in self.allowed:
-                 if allowed == request.url_rule.rule:
+                if allowed == request.url_rule.rule:
                     return
 
         cookie = request.cookies.get(self.validator.cookie_name)
