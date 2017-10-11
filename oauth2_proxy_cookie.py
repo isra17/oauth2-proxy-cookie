@@ -39,8 +39,8 @@ class Validator(object):
         if not self.check_hmac(parts[2], sig):
             raise InvalidSignature
 
-        cookie_date = datetime.fromtimestamp(int(parts[1]))
-        now = datetime.now()
+        cookie_date = datetime.utcfromtimestamp(int(parts[1]))
+        now = datetime.utcnow()
         if cookie_date < (now - self.expiration) \
                 or cookie_date > (now + timedelta(minutes=5)):
             raise ExpiredCookie

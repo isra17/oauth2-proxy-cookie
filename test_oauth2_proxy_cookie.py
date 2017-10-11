@@ -3,9 +3,7 @@ import unittest
 from datetime import datetime, timedelta
 from oauth2_proxy_cookie import Validator, InvalidCookie, InvalidSignature, ExpiredCookie
 
-COOKIE_DATE = datetime(2017, 1, 1, 1, 0, 0)
-THEN = datetime(2017, 1, 1, 1, 30, 0)
-EXPIRE_DATE = datetime(2017, 1, 1, 2, 0, 0)
+COOKIE_DATE = datetime(2017, 1, 1, 6, 0, 0)
 
 EXPIRATION = timedelta(hours=1)
 VALID_COOKIE = 'Zm9vQGJhcg==|1483250400|7_TbBXD14iv4kEh5wPWzTdTe0Oo='
