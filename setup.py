@@ -11,8 +11,8 @@ with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
 setup(
     name='oauth2-proxy-cookie',
     version='0.1.0',
-    description='''bitly/oauth2-proxy compatible library to decode and validate
-                authenticated cookie.''',
+    description='bitly/oauth2-proxy compatible library to decode and validate '
+                'authenticated cookie.',
     long_description=long_description,
     url='https://github.com/isra17/oauth2-proxy-cookie',
     author='isra17',
@@ -21,8 +21,8 @@ setup(
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
-        'Topic :: Internet :: WWW/HTTP :: HTTP Servers'
-        'License :: OSI Approved :: GNU Lesser General Public License v3 or later (LGPLv3+)'
+        'Topic :: Internet :: WWW/HTTP :: HTTP Servers',
+        'License :: OSI Approved :: GNU Lesser General Public License v3 or later (LGPLv3+)',
         'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 3',
     ],

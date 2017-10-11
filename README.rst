@@ -22,3 +22,14 @@ Example
   cookie = request.headers.get('Cookie')
   value, time = validator.validate(cookie)
 
+Or with Flask extension:
+
+.. code:: python
+
+  from flask import request, abort
+  from oauth2_proxy_cookie import Validator
+
+  app = flask.Flask('Foo')
+  app.config.OAUTH2_PROXY_COOKIE_SECRET = <oauth2_proxy cookie secret>
+  oauth2_proxy = OAuth2ProxyCookie(force_https=True, allowed=['/public_path'])
+  oauth2_proxy.init_app(app)
