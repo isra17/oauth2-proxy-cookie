@@ -28,4 +28,4 @@ setup(
     ],
     keywords='oauth2-proxy authentication',
     py_modules=['oauth2_proxy_cookie'],
-    install_requires=['six'], )
+    install_requires=['six', 'flask'], )
