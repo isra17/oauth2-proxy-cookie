@@ -4,15 +4,22 @@ import hmac
 import six
 from datetime import datetime, timedelta
 
+
 class ValidateError(Exception):
     pass
 
+
 class InvalidCookie(ValidateError):
     pass
+
+
 class InvalidSignature(ValidateError):
     pass
+
+
 class ExpiredCookie(ValidateError):
     pass
+
 
 class Validator(object):
     def __init__(self, secret, cookie_name, expiration=timedelta(days=7)):
@@ -28,7 +35,6 @@ class Validator(object):
         self.secret = secret
         self.cookie_name = cookie_name.encode()
         self.expiration = expiration
-
 
     def validate(self, cookie_value):
         parts = cookie_value.split('|')
@@ -48,13 +54,11 @@ class Validator(object):
         value = base64.urlsafe_b64decode(parts[0])
         return value, cookie_date
 
-
     def sign(self, *args):
         h = hmac.new(self.secret, digestmod=hashlib.sha1)
         for arg in args:
             h.update(arg)
         return h.digest()
-
 
     def check_hmac(self, input_signature, signature):
         raw_input_signature = base64.urlsafe_b64decode(input_signature)
