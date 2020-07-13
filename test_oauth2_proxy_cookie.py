@@ -8,9 +8,9 @@ from oauth2_proxy_cookie import Validator, InvalidCookie, InvalidSignature, Expi
 COOKIE_DATE = datetime(2017, 1, 1, 6, 0, 0)
 
 EXPIRATION = timedelta(hours=1)
-VALID_COOKIE = 'Zm9vQGJhcg==|1483250400|7_TbBXD14iv4kEh5wPWzTdTe0Oo='
-INVALID_COOKIE = 'AAAA|1483250400|7_TbBXD14iv4kEh5wPWzTdTe0Oo='
-EXPIRED_COOKIE = 'Zm9vQGJhcg==|1483254000|lCSWqvfyJY_QP8boDfT3mwEl3GI='
+VALID_COOKIE = 'Zm9vQGJhcg==|1483250400|WW3isJGM26B1RCA2fxVnI0c88nzEdPmt5Yjs8I7Y6DE='
+INVALID_COOKIE = 'AAAA|1483250400|WW3isJGM26B1RCA2fxVnI0c88nzEdPmt5Yjs8I7Y6DE='
+EXPIRED_COOKIE = 'Zm9vQGJhcg==|1483254000|1d7LggzEsqWNe3KWNb7Tv3VIZhcc3WMKJ6YgPQ13Das='
 
 
 class OAuth2ProxyCookieTest(unittest.TestCase):

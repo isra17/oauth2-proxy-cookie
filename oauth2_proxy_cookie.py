@@ -62,7 +62,7 @@ class Validator(object):
         return value, cookie_date
 
     def sign(self, *args):
-        h = hmac.new(self.secret, digestmod=hashlib.sha1)
+        h = hmac.new(self.secret, digestmod=hashlib.sha256)
         for arg in args:
             h.update(arg.encode())
         return h.digest()
